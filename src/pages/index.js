@@ -16,7 +16,7 @@ function iMessage() {
     const newMessage = { user: true, text: userInput };
     setMessages([...messages, newMessage, { user: false, text: "loading" }]);
     setKanyeTyping(true);
-    axios.post('https://kanye-backend.vercel.app/', {
+    axios.post('https://main--resilient-syrniki-572620.netlify.app/', {
         message: userInput
     }, {
         headers: {
