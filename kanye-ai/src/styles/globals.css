@@ -5,6 +5,8 @@
   font-weight: 500;
   font-family: 'Source Sans Pro', sans-serif;
   color: #6e6f70;
+  margin-top: 2px !important;
+  margin-bottom: 2px Im !important;
 }
 
 .chat-container {
@@ -61,11 +63,14 @@
   max-width: 70%;
 }
 
+.message-text {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
 .profile-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin-right: 10px;
 }
 
 .user-image {
@@ -123,9 +128,10 @@
 
 .name {
   font-family: 'Helvetica', 'Arial', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  margin-top: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .back-button {
@@ -142,4 +148,8 @@
   color: #C53AAE;
   text-decoration: none;
   font-weight: 500;
+}
+
+.bot-image{
+  margin-right: 10px;
 }

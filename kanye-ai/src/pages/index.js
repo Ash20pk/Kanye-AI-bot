@@ -10,10 +10,11 @@ function iMessage() {
   const handleChange = (event) => {
     setUserInput(event.target.value);
   };
-
+  console.log(messages)
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newMessage = { user: true, text: userInput };
+    setMessages([...messages, newMessage, { user: false, text: "loading" }]);
     setKanyeTyping(true);
     axios.post('http://localhost:8080/bot', {
         message: userInput
@@ -35,7 +36,6 @@ function iMessage() {
         setMessages([...messages, newMessage, botResponse]);
         setKanyeTyping(false);
     });
-    setMessages([...messages, newMessage]);
     setUserInput("");
     setKanyeTyping(true);
   };
@@ -69,7 +69,7 @@ function iMessage() {
                         {message.user ? (
                         <>
                             <div className="user-message message">
-                                <div>{message.text}</div>
+                                <div className="message-text">{message.text}</div>
                             </div>
                             <img
                                 className="profile-image user-image"
@@ -85,7 +85,7 @@ function iMessage() {
                                 alt="Bot Profile"
                             />
                             {message.text === 'loading' ? <img className="typing-bubble" src='https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExODg3ZjFlNzQ1Mzc1ZTFlNTMyZTVjODIzMDYyODUwNDQ0ZDY3ZmU5YyZjdD1z/3tLfKrc4pLWiTkAAph/giphy.gif' /> : <div className="bot-message message">
-                                <div>{message.text}</div>
+                                <div className="message-text">{message.text}</div>
                             </div>}
                         </>
                         )}
