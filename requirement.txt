@@ -1,6 +1,7 @@
 # Function dependencies, for example:
 # package>=version
 
-sqlalchemy == 1.4.47
+sqlalchemy==1.4.47
+pymysql==1.0.3
 flask-cors
 flask
