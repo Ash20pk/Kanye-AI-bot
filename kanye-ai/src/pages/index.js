@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import axios from "@/lib/axios";
+import axios from "axios";
 
 function iMessage() {
   const [userInput, setUserInput] = useState("");
@@ -14,7 +14,8 @@ function iMessage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newMessage = { user: true, text: userInput };
-    axios.post('https://asia-south1-engaged-truth-382809.cloudfunctions.net/chatbot-kanye', {
+    setKanyeTyping(true);
+    axios.post('http://localhost:8080/bot', {
         message: userInput
     }, {
         headers: {
@@ -22,18 +23,23 @@ function iMessage() {
         },
         withCredentials: true
     }).then((response) => {
-        console.log(response)
-    })
+        console.log(response);
+        // Update messages and setKanyeTyping to false when you receive the response
+        const botResponse = { user: false, text: response.data.results[0].response };
+        setMessages([...messages, newMessage, botResponse]);
+        setKanyeTyping(false);
+    }).catch((error) => {
+        console.error(error);
+        // Update messages and setKanyeTyping to false when you receive an error
+        const botResponse = { user: false, text: "Oops! Something went wrong." };
+        setMessages([...messages, newMessage, botResponse]);
+        setKanyeTyping(false);
+    });
     setMessages([...messages, newMessage]);
     setUserInput("");
-    setKanyeTyping(true)
-    setMessages([...messages, newMessage, { user: false, text: "loading" }]);
-    setTimeout(() => {
-        const botResponse = { user: false, text: "My name is Kanye West" };
-        setMessages([...messages, newMessage, botResponse]);
-        setKanyeTyping(false)
-    }, 2000);
+    setKanyeTyping(true);
   };
+  
 
   return (
     <>

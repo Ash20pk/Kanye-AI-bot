@@ -1,73 +1,67 @@
-import mindsdb
-import sqlalchemy
-import pymysql
 import json
-import functions_framework
 from sqlalchemy import create_engine
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-#initializing the db connection
-def get_connection(user, password, host, port, database):
-        return create_engine(
-                url="mysql+pymysql://{0}:{1}@{2}:{3}/{4}".format(user, password, host, port, database)
-        )
+app = Flask(__name__)
+CORS(app, origins='http://localhost:3000', supports_credentials=True)  # Set CORS headers for all routes
 
-@functions_framework.http
-def hello_world(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
-    """
 
-    # Set CORS headers for the preflight request
-    if request.method == 'OPTIONS':
-        # Allows GET requests from any origin with the Content-Type
-        # header and caches preflight response for an 3600s
+@app.route('/bot', methods=['POST'])
+def hello_world():
+    try:
+        # Set CORS headers for the response
         headers = {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'http://localhost:3000',
             'Access-Control-Allow-Methods': 'POST',
             'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Max-Age': '3600',
-            'Access-Control-Allow-Credentials': 'true' 
-        }
-
-        return (json_result, 204, headers)
-        
-    #mindsdb is a mysql db so these are the credentials
-    user = 'aswin.kumar@metaschool.so' 
-    password = 'Qnzxc91227#' 
-    host = 'cloud.mindsdb.com'
-    port = 3306
-    database = 'mindsdb'
-
-    try:
-        engine = get_connection(user, password, host, port, database)
-        print(f"Connection to the {host} for user {user} created successfully.")
-    except Exception as ex:
-        print("Connection could not be made due to the following error: \n", ex)
-
-    #running the query here 
-    request_json = request.get_json()
-    with engine.connect() as eng:
-        query = eng.execute(f"SELECT response from mindsdb.kanye_west2 WHERE text= '{request_json['message']}';")
-        results = []
-        for row in query:
-            row_dict = dict(row)
-            results.append(row_dict)
-
-        # Create a dictionary to store the results
-        result_dict = {'results': results}
-
-        # Convert the dictionary to a JSON format
-        json_result = json.dumps(result_dict, ensure_ascii=False)
-
-        # Set CORS headers for the main request
-        headers = {
-            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': 'true'
         }
 
-        return (json_result, 200, headers)
+        # Get the request data
+        request_json = request.get_json()
+        message = request_json['message']
+
+        # mindsdb is a MySQL db so these are the credentials
+        user = 'aswin.kumar@metaschool.so' 
+        password = 'Qnzxc91227#' 
+        host = 'cloud.mindsdb.com'
+        port = 3306
+        database = 'mindsdb'
+
+        # initializing the db connection
+        def get_connection(user, password, host, port, database):
+            return create_engine(
+                url="mysql+pymysql://{0}:{1}@{2}:{3}/{4}".format(user, password, host, port, database)
+            )
+
+        try:
+            engine = get_connection(user, password, host, port, database)
+            print(f"Connection to {host} for user {user} created successfully.")
+        except Exception as ex:
+            print("Connection could not be made due to the following error: \n", ex)
+
+        # Run the query
+        with engine.connect() as eng:
+            query = eng.execute(f"SELECT response from mindsdb.kanye_west2 WHERE text= '{message}';")
+            results = []
+            for row in query:
+                row_dict = dict(row)
+                results.append(row_dict)
+
+            # Create a dictionary to store the results
+            result_dict = {'results': results}
+
+            # Convert the dictionary to a JSON format
+            json_result = json.dumps(result_dict, ensure_ascii=False)
+
+            # Return the response with CORS headers
+            return (json_result, 200, headers)
+    except Exception as ex:
+        # Handle any errors that may occur during processing
+        # Return an error response if needed
+        return jsonify({'error': str(ex)}), 500
+
+
+if __name__ == '__main__':
+    app.run(host='localhost', port=8080)
