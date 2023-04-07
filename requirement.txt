@@ -1,0 +1,6 @@
+# Function dependencies, for example:
+# package>=version
+
+mindsdb == 23.3.4.0
+sqlalchemy == 1.4.47
+pymysql == 1.0.3
