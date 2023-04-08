@@ -16,7 +16,7 @@ function iMessage() {
     const newMessage = { user: true, text: userInput };
     setMessages([...messages, newMessage, { user: false, text: "loading" }]);
     setKanyeTyping(true);
-    axios.post('http://127.0.0.1:8000', {
+    axios.post('http://18.168.150.218:80/', {
         message: userInput
     }, {
         headers: {
