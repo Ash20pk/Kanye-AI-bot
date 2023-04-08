@@ -16,7 +16,7 @@ function iMessage() {
     const newMessage = { user: true, text: userInput };
     setMessages([...messages, newMessage, { user: false, text: "loading" }]);
     setKanyeTyping(true);
-    axios.post('https://18.168.150.218:80/', {
+    axios.post('http://kanyebackend-env.eba-y9qbygjj.eu-west-2.elasticbeanstalk.com/', {
         message: userInput
     }, {
         headers: {
